@@ -1,10 +1,33 @@
 """ Davidson iterative diagonalization """
-
 import numpy as np
 
 
-def davidson(hamiltonian, num_roots, convergence=1e-6):
-    """ Do the Davidson diagonalization """
+def davidson(hamiltonian, num_roots=3, convergence=1e-6):
+    """
+    Return the lowest several eigenvalues and associated eigenvectors of a real (M x M) symmetric
+    matrix using the Davidson iterative diagonalization method.
+    Returns two objects, a 1-D array containing the eigenvalues of `hamiltonian`, and
+    a 2-D square array of the corresponding eigenvectors (in columns).
+
+    Parameters
+    ----------
+    hamiltonian : (M, M) ndarray
+        Real symmetric matrix whose eigenvalues and eigenvectors are to be computed.
+
+    num_roots : int
+        Number of lowest eigenvalues and eigenvectors to be computed.
+
+    convergence : float
+        Calculation will end when the residual norm for each root falls below `convergence`
+
+    Returns
+    -------
+    eigenvalues : (num_roots) ndarray
+        The num_roots lowest eigenvalues in ascending order
+    eigenvectors : (M, num_roots) ndarray
+        The column ``eigenvectors[:, i]`` is the normalized eigenvector corresponding
+        to the eigenvalue ``eigenvalue[i]``.
+    """
 
     dim_hamiltonian = hamiltonian.shape[0]
     dim_subspace = min(3 * num_roots, dim_hamiltonian)
@@ -80,7 +103,7 @@ if __name__ == '__main__':
 
     t0 = time.time()
     np.random.seed(0)
-    NDIM = 4000
+    NDIM = 1000
     A = np.diag(np.arange(NDIM, dtype=np.float64))
     A[1:3, 1:3] = 0
     M = np.random.randn(NDIM, NDIM)
@@ -94,6 +117,7 @@ if __name__ == '__main__':
     E, C = davidson(A, NUM_ROOTS)
     t2 = time.time()
     print("Davidson (ms):         %.2f" % ((t2 - t1) * 1e3))
+    print(C.shape)
 
     E_true, C_true = np.linalg.eigh(A)
     E_true, C_true = E_true[:NUM_ROOTS], C_true[:, :NUM_ROOTS]
