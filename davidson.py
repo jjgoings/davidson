@@ -79,7 +79,7 @@ def davidson(hamiltonian, num_roots=3, convergence=1e-6):
                 # usually ~ 1e-4 is sufficient, but feel free to play with this
                 if new_vector_norm > 1e-4:
                     # if subspace too big, collapse to best set of eigenvectors
-                    if dim_subspace + 1 > min(500,dim_hamiltonian):
+                    if dim_subspace + 1 > min(500, dim_hamiltonian):
                         dim_subspace = num_roots
                         guess_vectors = eigenvectors
                         # enforce orthogonality (cheap b/c dim guess_vectors is small)
